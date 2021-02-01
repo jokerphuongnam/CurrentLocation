@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CurrentLocation</string>
+    <string name="require_sdk_m_or_higher">Require higher android 6 </string>
+    <string name="cannot_convert_from_json">Can\'t found data by current key</string>
+</resources>
