@@ -13,24 +13,17 @@ import kotlin.reflect.KClass
 class MainLocationViewModel @ViewModelInject constructor(private val useCase: MainLocationUseCase) :
     ViewModel() {
 
-    public fun<T: Service> isLocationRunning(service: KClass<T>) = useCase.isServiceRunning(service)
+    fun<T: Service> isLocationRunning(service: KClass<T>) = useCase.isServiceRunning(service)
 
     private val _liveLocation: MutableLiveData<Location?> by lazy {
         MutableLiveData<Location?>()
     }
 
-    public val liveLocation: MutableLiveData<Location?> get() = _liveLocation
+    val liveLocation: MutableLiveData<Location?> get() = _liveLocation
 
     fun getLastLocation() {
         viewModelScope.launch {
             _liveLocation.postValue(useCase.getLastLocation())
         }
     }
-
-    private var _actionRequestPermission: (() -> Unit)? = null
-    var actionRequestPermission: (() -> Unit)?
-        get() = _actionRequestPermission
-        set(value) {
-            _actionRequestPermission = value
-        }
 }

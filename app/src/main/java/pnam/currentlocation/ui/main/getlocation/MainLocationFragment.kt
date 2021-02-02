@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.util.Log
 import android.view.View.OnClickListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -79,7 +78,7 @@ class MainLocationFragment :
         Intent(requireContext(), LiveLocationService::class.java).apply {
             viewModel.isLocationRunning(LiveLocationService::class)
                 .also { notLocationRunning ->
-                    val notLocationRunning = !notLocationRunning
+                    @Suppress("NAME_SHADOWING") val notLocationRunning = !notLocationRunning
                     binding.getLiveLocation.isChecked = notLocationRunning
                     action = if (notLocationRunning) {
                         Constants.ACTION_START_LOCATION_SERVICE.also {
@@ -100,18 +99,16 @@ class MainLocationFragment :
         grantResults: IntArray
     ) {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            viewModel.actionRequestPermission = {
-                when (requestCode) {
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
-                        getLocation()
-                    }
-                    PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION -> {
-                        getLiveLocationService()
-                    }
-                    else -> {
-                        showToast("Denied")
-                        println()
-                    }
+            when (requestCode) {
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+                    getLocation()
+                }
+                PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION -> {
+                    getLiveLocationService()
+                }
+                else -> {
+                    showToast("Denied")
+                    println()
                 }
             }
         } else {
