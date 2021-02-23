@@ -1,21 +1,19 @@
 package pnam.currentlocation.ui.main.viewlocation
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import pnam.currentlocation.model.database.domain.Location
+import javax.inject.Inject
 
-class ViewLocationViewModel @ViewModelInject constructor() :
-    ViewModel() {
+@HiltViewModel
+class ViewLocationViewModel @Inject constructor() : ViewModel() {
     private val _liveLocation: MutableLiveData<Location> by lazy { MutableLiveData<Location>() }
     var location: Location
         set(value) {
             _liveLocation.postValue(value)
         }
         get() = _liveLocation.value ?: throw NullPointerException()
-    var liveLocation: MutableLiveData<Location>
+    val liveLocation: MutableLiveData<Location>
         get() = _liveLocation
-        private set(value) {
-            TODO()
-        }
 }

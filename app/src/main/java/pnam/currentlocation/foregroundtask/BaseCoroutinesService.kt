@@ -3,9 +3,7 @@ package pnam.currentlocation.foregroundtask
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 

@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import pnam.currentlocation.model.repository.location.LocationRepository
 import pnam.currentlocation.model.repository.location.DefaultLocationRepositoryImpl
+import pnam.currentlocation.utils.Constants.NAMED_SERVICE
 import javax.inject.Named
 
 @Module
@@ -23,7 +24,7 @@ object ServiceModule {
 
     @Provides
     @ServiceScoped
-    @Named("Service")
+    @Named(NAMED_SERVICE)
     fun provideLocationRepository(@ApplicationContext context: Context): LocationRepository =
         DefaultLocationRepositoryImpl(context)
 }

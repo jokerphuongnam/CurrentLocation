@@ -12,24 +12,23 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import pnam.currentlocation.R
 import pnam.currentlocation.model.database.domain.Location
 import pnam.currentlocation.model.repository.location.LocationRepository
 import pnam.currentlocation.utils.Constants
 import pnam.currentlocation.utils.Constants.LOCATION_HIGH_CHANNEL_ID
 import pnam.currentlocation.utils.Constants.LOCATION_SERVICE_ID
+import pnam.currentlocation.utils.Constants.NAMED_SERVICE
 import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
 class LiveLocationService : BaseCoroutinesService() {
     @Inject
-    @Named("Service")
+    @Named(NAMED_SERVICE)
     lateinit var locationRepo: LocationRepository
 
     private var isNotificationRunning: Boolean = false

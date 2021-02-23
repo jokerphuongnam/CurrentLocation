@@ -4,12 +4,13 @@ import android.app.Service
 import pnam.currentlocation.model.database.domain.Location
 import pnam.currentlocation.model.repository.location.LocationRepository
 import pnam.currentlocation.model.repository.service.ServiceRepository
+import pnam.currentlocation.utils.Constants.NAMED_APP
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
 
 class MainLocationUseCaseImpl @Inject constructor(
-    @Named("App") override val repository: LocationRepository,
+    @Named(NAMED_APP) override val repository: LocationRepository,
     override val serviceRepository: ServiceRepository
 ) :
     MainLocationUseCase {

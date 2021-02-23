@@ -1,11 +1,9 @@
 package pnam.currentlocation.model.database.domain
 
 import android.location.Address
-import androidx.annotation.Keep
 import java.io.Serializable
 import javax.inject.Inject
 
-@Keep
 class Location @Inject constructor(
     private var _latitude: Double?,
     private var _longitude: Double?
@@ -54,5 +52,4 @@ class Location @Inject constructor(
     constructor(location: Address) : this(null, null) {
         locationByPhone(location)
     }
-
 }
