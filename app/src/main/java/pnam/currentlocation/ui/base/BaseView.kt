@@ -19,15 +19,8 @@ import kotlin.reflect.KClass
 interface BaseView<VB : ViewBinding, VM : ViewModel> {
     var binding: VB
     fun createBinding(): VB
+    fun setLifecycleOwner()
     val viewModel: VM
-    fun createViewModel(
-        viewModelStore: ViewModelStore,
-        defaultViewModelProviderFactory: ViewModelProvider.Factory,
-        factoryProducer: (() -> ViewModelProvider.Factory)? = null
-    ): VM = ViewModelLazy(
-        viewModelKClass,
-        { viewModelStore },
-        factoryProducer ?: { defaultViewModelProviderFactory }).value
 
     val navController: NavController?
 
@@ -85,8 +78,6 @@ interface BaseView<VB : ViewBinding, VM : ViewModel> {
             }
         }
     }
-
-    fun onDestroy()
 
     fun baseRequestPermissions(permissions: Array<String>, requestCode: Int)
 

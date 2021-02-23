@@ -17,6 +17,9 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel>(@LayoutRes ove
     AppCompatActivity(), BaseView<VB, VM> {
     override lateinit var binding: VB
     final override fun createBinding(): VB = DataBindingUtil.setContentView(this, layoutRes)
+    override fun action() {
+        binding.lifecycleOwner = this
+    }
 
     protected abstract val idNavController: Int?
     override val navController: NavController? by lazy {
@@ -53,15 +56,11 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel>(@LayoutRes ove
         super.onPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.executePendingBindings()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = createBinding()
         action()
+        setLifecycleOwner()
     }
 
     override fun onBackPressed() {

@@ -26,6 +26,10 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : ViewModel>(@LayoutRes ove
         layoutRes, container, false
     )
 
+    override fun setLifecycleOwner() {
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
+
     private var container: ViewGroup? = null
 
     override fun showToast(text: CharSequence, duration: Int) =
@@ -70,10 +74,8 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : ViewModel>(@LayoutRes ove
         navController = null
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.executePendingBindings()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        action()
+        setLifecycleOwner()
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = action()
 }
