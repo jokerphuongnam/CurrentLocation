@@ -70,5 +70,10 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : ViewModel>(@LayoutRes ove
         navController = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.executePendingBindings()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = action()
 }

@@ -53,6 +53,11 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : ViewModel>(@LayoutRes ove
         super.onPause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.executePendingBindings()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = createBinding()

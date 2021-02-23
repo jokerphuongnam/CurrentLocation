@@ -86,6 +86,8 @@ interface BaseView<VB : ViewBinding, VM : ViewModel> {
         }
     }
 
+    fun onDestroy()
+
     fun baseRequestPermissions(permissions: Array<String>, requestCode: Int)
 
     fun <T> LiveData<T>.observe(observer: Observer<T>)
