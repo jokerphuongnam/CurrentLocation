@@ -12,9 +12,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import pnam.currentlocation.R
 import pnam.currentlocation.model.database.domain.Location
 import pnam.currentlocation.model.repository.location.LocationRepository
@@ -115,7 +117,7 @@ class LiveLocationService : BaseCoroutinesService() {
     }
 
     private fun observeGetLocation(location: Location) {
-        notificationBuilder.setContentText("${location.latitude} - ${location.longitude}")
+        notificationBuilder.setContentText("latitude: ${location.latitude} - longitude: ${location.longitude}")
         with(NotificationManagerCompat.from(applicationContext)) {
             notify(LOCATION_SERVICE_ID, notificationBuilder.build())
         }

@@ -8,11 +8,11 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import pnam.currentlocation.model.database.domain.Location
 import java.util.*
 import kotlin.coroutines.resume
@@ -48,33 +48,60 @@ class DefaultLocationRepositoryImpl(private val context: Context) : LocationRepo
 
     private var isGetLocationRunning: Boolean = false
 
+    private val locationCallback: LocationCallback by lazy {
+        object : LocationCallback() {
+
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                scope.launch {
+                    getLiveLocationSuspend?.invoke(locationResult)
+                    scope.cancel()
+                }
+            }
+        }
+
+    }
+    private val scope: CoroutineScope by lazy {
+        CoroutineScope(Dispatchers.IO)
+    }
+
+    private val looper: Looper by lazy {
+        Looper.getMainLooper()
+    }
+
+    private var getLiveLocationSuspend: (suspend (LocationResult) -> Unit)? = null
+
     @ExperimentalCoroutinesApi
     @SuppressLint("MissingPermission")
     override fun getLiveLocation(): Flow<Location> = channelFlow {
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                val geocoder = Geocoder(context, Locale.getDefault())
-                val lastLocation: android.location.Location = locationResult.lastLocation
-                val fromLocation =
-                    geocoder.getFromLocation(lastLocation.latitude,
-                        lastLocation.longitude,
-                        1)
-                offer(Location(fromLocation[0]))
+        withContext(Dispatchers.IO) {
+            if(getLiveLocationSuspend == null){
+                getLiveLocationSuspend = { locationResult ->
+                    val geocoder = Geocoder(context, Locale.getDefault())
+                    val lastLocation: android.location.Location = locationResult.lastLocation
+                    val fromLocation =
+                        geocoder.getFromLocation(
+                            lastLocation.latitude,
+                            lastLocation.longitude,
+                            1
+                        )
+                    offer(Location(fromLocation[0]))
+                }
             }
+            fusedLocationClient.requestLocationUpdates(
+                LocationRequest().apply {
+                    interval = 4000
+                    fastestInterval = 2000
+                    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                },
+                locationCallback,
+                looper
+            )
         }
-        fusedLocationClient.requestLocationUpdates(
-            LocationRequest().apply {
-                interval = 4000
-                fastestInterval = 2000
-                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            },
-            locationCallback,
-            Looper.getMainLooper()
-        )
         isGetLocationRunning = true
         awaitClose {
             fusedLocationClient.removeLocationUpdates(locationCallback)
+            scope.cancel()
         }
     }
 }

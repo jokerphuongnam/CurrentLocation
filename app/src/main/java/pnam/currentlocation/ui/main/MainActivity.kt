@@ -1,8 +1,6 @@
 package pnam.currentlocation.ui.main
 
 import androidx.activity.viewModels
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import pnam.currentlocation.R
 import pnam.currentlocation.R.id
